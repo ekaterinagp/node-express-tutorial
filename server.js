@@ -12,7 +12,7 @@ const routes = require("./routes");
 
 const app = express();
 
-const port = 3000;
+const port = 3001;
 
 app.set("trust proxy", 1); //if has to deploy with cookies, iotherwise will not work
 
@@ -29,6 +29,10 @@ app.set("views", path.join(__dirname, "./views"));
 app.locals.siteName = "ROUX Meetups";
 
 app.use(express.static(path.join(__dirname, "./static")));
+
+// app.get("/throw", (request, response, next) => {
+//   return next(new Error("Error is thrown"));
+// });
 
 app.use(async (request, response, next) => {
   try {

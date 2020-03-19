@@ -7,20 +7,27 @@ const router = express.Router();
 
 module.exports = params => {
   const { speakersService } = params;
-  router.get("/", async (request, response) => {
-    const topSpeakers = await speakersService.getList();
-    console.log(topSpeakers);
-    //checking for visits for specific user
-    // if (!request.session.visitcount) {
-    //   request.session.visitcount = 0;
-    // }
-    // request.session.visitcount += 1;
-    // console.log(`Number of visits: ${request.session.visitcount}`);
-    response.render("layout", {
-      pageTitle: "Welcome",
-      template: "index",
-      topSpeakers
-    });
+
+  router.get("/", async (request, response, next) => {
+    return next(new Error("Some error"));
+    try {
+      const artwork = await speakersService.getAllArtwork();
+      const topSpeakers = await speakersService.getList();
+      //checking for visits for specific user
+      // if (!request.session.visitcount) {
+      //   request.session.visitcount = 0;
+      // }
+      // request.session.visitcount += 1;
+      // console.log(`Number of visits: ${request.session.visitcount}`);
+      return response.render("layout", {
+        pageTitle: "Welcome",
+        template: "index",
+        topSpeakers,
+        artwork
+      });
+    } catch (err) {
+      return next(err);
+    }
   });
 
   router.use("/speakers", speakersRoute(params));
