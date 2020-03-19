@@ -5,8 +5,8 @@
     check out some of the work from our speakers.
   </p>
   <div class="pixgrid clearfix">
-    <% artwork.forEach((art, index)=>{%>
-    <img src="/images/artwork/<%=art%>" alt="Artwork <%=index%>" />
+    <% artwork.forEach(function (item, key) {%>
+    <img src="/images/artwork/<%=item%>" alt="Artwork <%=key%>" />
     <%})%>
   </div>
 </article>
