@@ -12,13 +12,18 @@ module.exports = params => {
       const errors = request.session.feedback
         ? request.session.feedback.errors
         : false;
+
+      const successMessage = request.session.feedback
+        ? request.session.feedback.message
+        : false;
       request.session.feedback = {};
 
       return response.render("layout", {
         pageTitle: "Feedback",
         template: "feedback",
         feedback,
-        errors
+        errors,
+        successMessage
       });
     } catch (err) {
       return next(err);
@@ -49,7 +54,7 @@ module.exports = params => {
         .escape()
         .withMessage("a message should be min 5")
     ],
-    (request, response) => {
+    async (request, response) => {
       const errors = validationResult(request);
 
       if (!errors.isEmpty()) {
@@ -58,7 +63,13 @@ module.exports = params => {
         };
         return response.redirect("/feedback");
       }
-      console.log(request.body);
+      const { name, email, title, message } = request.body;
+      await feedbackService.addEntry(name, email, title, message);
+      request.session.feedback = {
+        message: "Thank you for feedback bla"
+      };
+      return response.redirect("/feedback");
+      // console.log(request.body);
       return response.send("Feedback form posted");
     }
   );
